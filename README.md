@@ -16,22 +16,27 @@ Getting started
 
         <script type='text/javascript' src='path/to/angular.min.js'></script>
         <script type='text/javascript' src='path/to/lodash.min.js'></script>
-        <script type='text/javascript' src='path/to/angular-dark-sky.js'></script>
-
- * Specifiy Dependency - ensure that your application module specifies dark-sky as a dependency:
-
-        angular.module('myApp', ['dark-sky']);
+        <script type='text/javascript' src='path/to/angular-dark-sky.js'></script>      
 
  * Configure the provider by setting the API key:
 
-        app.config(['darkSkyProvider', function(darkSkyProvider) {
+				angular.module('app', ['app.weather']);
+
+				... 
+
+        angular.module('app').config(['darkSkyProvider', function(darkSkyProvider) {
             darkSkyProvider
                 .setApiKey('XXXXXXX');
         }]);
 
- * Inject service - inject `darkSky` service into your Ctrl/directive/service/etc:
+ * Specify dependency - ensure that your module specifies dark-sky as a dependency:
 
- 		angular.module('app.weatherWidget')
+				angular.module('app.weather', ['dark-sky'])
+					...
+
+ * inject service - inject `darkSky` service into your controller/directive/service/etc:
+
+				angular.module('app.weather', ['dark-sky'])
 	        .controller('WeatherCtrl', [
 	        	'$q', 'darkSky',
 	        	function($q, darkSky) {
