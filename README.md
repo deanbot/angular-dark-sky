@@ -33,7 +33,7 @@ Getting started
 
  		angular.module('app.weatherWidget')
 	        .controller('WeatherCtrl', [
-	        	'$q', darkSky',
+	        	'$q', 'darkSky',
 	        	function($q, darkSky) {
 		        	activate();
 
@@ -56,7 +56,7 @@ Getting started
         				if ("geolocation" in navigator) {
 	        				// get position / prompt for access
 	          				navigator.geolocation.getCurrentPosition(function(position) {
-	          					deferred.resolve(position);
+	          					deferred.resolve(position.coords);
 	          				});
           				} else {
           					deferred.reject('geolocation not supported');

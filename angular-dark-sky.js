@@ -10,7 +10,7 @@
  * @author Dean Verleger <deanverleger@gmail.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
  */
-(function() {
+(function () {
   'use strict';
 
   angular.module('dark-sky', [])
@@ -26,7 +26,7 @@
         baseUri: 'https://api.darksky.net/forecast/',
         baseExclude: '&exclude=',
         acceptedUnits: ['auto', 'ca', 'uk2', 'us', 'si'],
-        acceptedLanguage: [ 
+        acceptedLanguage: [
           'ar', 'az', 'be', 'bs', 'cs', 'de', 'el', 'en', 'es', 'fr', 'hr', 'hu', 'id', 'it', 'is', 'kw', 'nb', 'nl', 'pl', 'pt', 'ru', 'sk', 'sr', 'sv', 'tet', 'tr', 'uk', 'x-pig-latin', 'zh', 'zh-tw'
         ]
       },
@@ -37,7 +37,7 @@
      * Set API key for request
      * @param {String} value - your Dark Sky API key
      */
-    this.setApiKey = function(value) {
+    this.setApiKey = function (value) {
       apiKey = value;
       return this;
     };
@@ -46,7 +46,7 @@
      * Set unit type for response formatting
      * @param {String} value - unit token
      */
-    this.setUnits = function(value) {
+    this.setUnits = function (value) {
       if (_.indexOf(config.acceptedUnits, value) === -1) {
         console.warn(value + ' not an accepted API unit.');
       }
@@ -58,7 +58,7 @@
      * Set language for response summaries
      * @param {String} value - language token
      */
-    this.setLanguage = function(value) {
+    this.setLanguage = function (value) {
       if (_.indexOf(config.acceptedLanguage, value) === -1) {
         console.warn(value + ' not an accepted API language.');
       }
@@ -69,7 +69,7 @@
     /**
      * Service definition
      */
-    this.$get = ['$http', '$q', function($http, $q) {
+    this.$get = ['$http', '$q', function ($http, $q) {
       var service = {
         getCurrent: getCurrent,
         getForecast: getForecastDaily,
@@ -222,27 +222,27 @@
           }
         }
         return {
-          current: function() {
+          current: function () {
             var query = excludeString('currently') + optionsString(options);
             return fetch(latitude, longitude, query, time);
           },
-          daily: function() {
+          daily: function () {
             var query = excludeString('daily') + optionsString(options);
             return fetch(latitude, longitude, query, time);
           },
-          hourly: function() {
+          hourly: function () {
             var query = excludeString('hourly') + optionsString(options);
             return fetch(latitude, longitude, query, time);
           },
-          minutely: function() {
+          minutely: function () {
             var query = excludeString('minutely') + optionsString(options);
             return fetch(latitude, longitude, query, time);
           },
-          alerts: function() {
+          alerts: function () {
             var query = excludeString('alerts') + optionsString(options);
             return fetch(latitude, longitude, query, time);
           },
-          flags: function() {
+          flags: function () {
             var query = excludeString('flags') + optionsString(options);
             return fetch(latitude, longitude, query, time);
           }
@@ -258,7 +258,7 @@
         var blocks = ['alerts', 'currently', 'daily', 'flags', 'hourly', 'minutely'],
           excludes = _.without(blocks, toRetrieve),
           query = _.join(excludes, ',');
-        return config.baseExclude +  query;
+        return config.baseExclude + query;
       }
 
       /**
@@ -268,8 +268,8 @@
        */
       function optionsString(options) {
         var defaults = {
-            extend: false
-          },
+          extend: false
+        },
           atts = _.defaults(options, defaults),
           query = '';
         if (options) {
@@ -278,6 +278,7 @@
             query += '&extend=hourly';
           }
         }
+        return query;
       }
 
       /**
@@ -289,11 +290,15 @@
        * @returns {promise} - resolves to weather data object
        */
       function fetch(latitude, longitude, query, time) {
+        if (!latitude || !longitude) {
+          console.warn("no latitude or longitude sent to weather api");
+        }
         var time = time ? ', ' + time : '',
           url = [config.baseUri, apiKey, '/', latitude, ',', longitude, time, '?units=', units, '&lang=', language, query, '&callback=JSON_CALLBACK'].join('');
+        console.log(url);
         return $http
           .jsonp(url)
-          .then(function(results) {
+          .then(function (results) {
             // check response code
             if (parseInt(results.status) === 200) {
               return results.data;
@@ -301,7 +306,7 @@
               return $q.reject(results);
             }
           })
-          .catch(function(data, status, headers, config) {
+          .catch(function (data, status, headers, config) {
             return $q.reject(status);
           });
       }
