@@ -47,7 +47,7 @@
      * @param {String} value - unit token
      */
     this.setUnits = function (value) {
-      if (_.indexOf(config.acceptedUnits, value) === -1) {
+      if (config.acceptedUnits.indexOf(value) === -1) {
         console.warn(value + ' not an accepted API unit.');
       }
       units = value;
@@ -59,7 +59,7 @@
      * @param {String} value - language token
      */
     this.setLanguage = function (value) {
-      if (_.indexOf(config.acceptedLanguage, value) === -1) {
+      if (config.acceptedLanguage.indexOf(value) === -1) {
         console.warn(value + ' not an accepted API language.');
       }
       language = value;
@@ -93,7 +93,6 @@
        * @param {number} longitude position
        * @param {object} [options] - additional query options
        * ... {unix timestamp} options.time - send timestamp for timemachine requests
-       * ... {boolean} options.extend - pass true for extended forecast 
        * @returns {promise} - resolves with current weather data object
        */
       function getCurrent(latitude, longitude, options) {
@@ -217,9 +216,6 @@
         // check for time option
         if (options && options.time) {
           time = options.time;
-          if (!moment(time).isValid()) {
-            console.warn('Specified time is not valid');
-          }
         }
         return {
           current: function () {
@@ -255,9 +251,11 @@
        * @returns {string} - exclude query string with base excludes and your excludes
        */
       function excludeString(toRetrieve) {
-        var blocks = ['alerts', 'currently', 'daily', 'flags', 'hourly', 'minutely'],
-          excludes = _.without(blocks, toRetrieve),
-          query = _.join(excludes, ',');
+        var query,
+          blocks = ['alerts', 'currently', 'daily', 'flags', 'hourly', 'minutely'],
+          includeIndex = blocks.indexOf(toRetrieve);
+        blocks.splice(includeIndex, 1);
+        query = blocks.join(',');
         return config.baseExclude + query;
       }
 
@@ -270,7 +268,7 @@
         var defaults = {
           extend: false
         },
-          atts = _.defaults(options, defaults),
+          atts = extend({}, defaults, options),
           query = '';
         if (options) {
           // parse extend option
@@ -279,6 +277,21 @@
           }
         }
         return query;
+      }
+
+      function extend(out) {
+        out = out || {};
+        for (var i = 1; i < arguments.length; i++) {
+          if (!arguments[i]) {
+            continue;
+          }
+          for (var key in arguments[i]) {
+            if (arguments[i].hasOwnProperty(key)) {
+              out[key] = arguments[i][key];
+            }
+          }
+        }
+        return out;
       }
 
       /**
@@ -295,7 +308,6 @@
         }
         var time = time ? ', ' + time : '',
           url = [config.baseUri, apiKey, '/', latitude, ',', longitude, time, '?units=', units, '&lang=', language, query, '&callback=JSON_CALLBACK'].join('');
-        console.log(url);
         return $http
           .jsonp(url)
           .then(function (results) {

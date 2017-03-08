@@ -15,8 +15,7 @@ Getting started
  * Include Scripts - the provider script should be included after the AngularJS script:
 
         <script type='text/javascript' src='path/to/angular.min.js'></script>
-        <script type='text/javascript' src='path/to/lodash.min.js'></script>
-        <script type='text/javascript' src='path/to/angular-dark-sky.js'></script>      
+        <script type='text/javascript' src='path/to/angular-dark-sky.js'></script>
 
  * Configure the provider by setting the API key:
 
@@ -37,38 +36,40 @@ Getting started
  * inject service - inject `darkSky` service into your controller/directive/service/etc:
 
 				angular.module('app.weather', ['dark-sky'])
-	        .controller('WeatherCtrl', [
-	        	'$q', 'darkSky',
-	        	function($q, darkSky) {
-		        	activate();
+	          .controller('WeatherCtrl', WeatherCtrl);
 
-		        	// log current weather data
-		        	function activate() {
-		        		getNavigatorCoords()
-			        		.then(function(position) {
-			        			darkSky.getCurrent(position.latitude, position.longitude)
-			        				.then(console.log)
-			        				.catch(console.warn);
-			        		})
-			        		.catch(console.warn);
-			        }
+				WeatherCtrl.$inject = ['$q', 'darkSky'];
+	        
+				function WeatherCtrl($q, darkSky) {
+					activate();
+
+					// log current weather data
+					function activate() {
+						getNavigatorCoords()
+							.then(function(position) {
+								darkSky.getCurrent(position.latitude, position.longitude)
+									.then(console.log)
+									.catch(console.warn);
+							})
+							.catch(console.warn);
+					}
 
 					// Get current location coordinates if supported by browser
-		        	function getNavigatorCoords() {
-		        		var deferred = $q.defer();
+					function getNavigatorCoords() {
+						var deferred = $q.defer();
 
-		        		// check for browser support
-        				if ("geolocation" in navigator) {
-	        				// get position / prompt for access
-	          				navigator.geolocation.getCurrentPosition(function(position) {
-	          					deferred.resolve(position.coords);
-	          				});
-          				} else {
-          					deferred.reject('geolocation not supported');
-          				}
-          				return deferred.promise;
-		        	}
-	        	}]);
+						// check for browser support
+						if ("geolocation" in navigator) {
+						// get position / prompt for access
+							navigator.geolocation.getCurrentPosition(function(position) {
+								deferred.resolve(position.coords);
+							});
+						} else {
+							deferred.reject('geolocation not supported');
+						}
+						return deferred.promise;
+					}
+				});
 
 Provider API
 ------------
