@@ -14,62 +14,61 @@ Getting started
 
  * Include Scripts - the provider script should be included after the AngularJS script:
 
-        <script type='text/javascript' src='path/to/angular.min.js'></script>
-        <script type='text/javascript' src='path/to/angular-dark-sky.js'></script>
+		<script type='text/javascript' src='path/to/angular.min.js'></script>
+		<script type='text/javascript' src='path/to/angular-dark-sky.js'></script>
 
  * Configure the provider by setting the API key:
 
-				angular.module('app', ['app.weather']);
+		angular.module('app', ['app.weather']);
 
-				... 
+		... 
 
-        angular.module('app').config(['darkSkyProvider', function(darkSkyProvider) {
-            darkSkyProvider
-                .setApiKey('XXXXXXX');
-        }]);
+		angular.module('app').config(['darkSkyProvider', function(darkSkyProvider) {
+			darkSkyProvider.setApiKey('XXXXXXX');
+		}]);
 
  * Specify dependency - ensure that your module specifies dark-sky as a dependency:
 
-				angular.module('app.weather', ['dark-sky'])
-					...
+		angular.module('app.weather', ['dark-sky'])
+		...
 
  * inject service - inject `darkSky` service into your controller/directive/service/etc:
 
-				angular.module('app.weather', ['dark-sky'])
-	          .controller('WeatherCtrl', WeatherCtrl);
+		angular.module('app.weather', ['dark-sky'])
+			.controller('WeatherCtrl', WeatherCtrl);
 
-				WeatherCtrl.$inject = ['$q', 'darkSky'];
-	        
-				function WeatherCtrl($q, darkSky) {
-					activate();
+		WeatherCtrl.$inject = ['$q', 'darkSky'];
+			
+		function WeatherCtrl($q, darkSky) {
+			activate();
 
-					// log current weather data
-					function activate() {
-						getNavigatorCoords()
-							.then(function(position) {
-								darkSky.getCurrent(position.latitude, position.longitude)
-									.then(console.log)
-									.catch(console.warn);
-							})
+			// log current weather data
+			function activate() {
+				getNavigatorCoords()
+					.then(function(position) {
+						darkSky.getCurrent(position.latitude, position.longitude)
+							.then(console.log)
 							.catch(console.warn);
-					}
+					})
+					.catch(console.warn);
+			}
 
-					// Get current location coordinates if supported by browser
-					function getNavigatorCoords() {
-						var deferred = $q.defer();
+			// Get current location coordinates if supported by browser
+			function getNavigatorCoords() {
+				var deferred = $q.defer();
 
-						// check for browser support
-						if ("geolocation" in navigator) {
-						// get position / prompt for access
-							navigator.geolocation.getCurrentPosition(function(position) {
-								deferred.resolve(position.coords);
-							});
-						} else {
-							deferred.reject('geolocation not supported');
-						}
-						return deferred.promise;
-					}
-				});
+				// check for browser support
+				if ("geolocation" in navigator) {
+					// get position / prompt for access
+					navigator.geolocation.getCurrentPosition(function(position) {
+						deferred.resolve(position.coords);
+					});
+				} else {
+					deferred.reject('geolocation not supported');
+				}
+				return deferred.promise;
+			}
+		});
 
 Provider API
 ------------
