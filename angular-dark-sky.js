@@ -307,7 +307,7 @@
           console.warn("no latitude or longitude sent to weather api");
         }
         var time = time ? ', ' + time : '',
-          url = [config.baseUri, apiKey, '/', latitude, ',', longitude, time, '?units=', units, '&lang=', language, query, '&callback=JSON_CALLBACK'].join('');
+          url = [config.baseUri, apiKey, '/', latitude, ',', longitude, time, '?units=', units, '&lang=', language, query].join('');
         return $http
           .jsonp(url)
           .then(function (results) {
