@@ -1,0 +1,18 @@
+{
+  "name": "angular-dark-sky",
+  "version": "0.0.2",
+  "description": "angular.js provider for fetching current weather and forecast data using the dark sky api",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deanbot/angular-dark-sky.git"
+  },
+  "author": "Dean Verleger",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/deanbot/angular-dark-sky/issues"
+  },
+  "homepage": "https://github.com/deanbot/angular-dark-sky#readme"
+}
