@@ -1,7 +1,7 @@
 angular-dark-sky
 ================
 
-Angular.js provider for fetching current and forecasted (7 days) weather data using the Dark Sky API.
+Angular.js 1.x provider for fetching current and forecasted (7 days) weather data using the Dark Sky API.
 
 An API key from [darksky.net/dev/](https://darksky.net/dev/) is required in order to use this provider. See https://darksky.net/dev/ for further information. 
 
