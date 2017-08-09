@@ -69,7 +69,7 @@
     /**
      * Service definition
      */
-    this.$get = ['$http', '$q', function ($http, $q) {
+    this.$get = ['$http', '$q', '$sce', function ($http, $q, $sce) {
       var service = {
         getCurrent: getCurrent,
         getForecast: getForecastDaily,
@@ -309,7 +309,7 @@
         var time = time ? ', ' + time : '',
           url = [config.baseUri, apiKey, '/', latitude, ',', longitude, time, '?units=', units, '&lang=', language, query].join('');
         return $http
-          .jsonp(url)
+          .jsonp($sce.trustAsResourceUrl(url))
           .then(function (results) {
             // check response code
             if (parseInt(results.status) === 200) {
