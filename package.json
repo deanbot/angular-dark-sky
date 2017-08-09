@@ -1,6 +1,6 @@
 {
   "name": "angular-dark-sky",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "angular.js provider for fetching current weather and forecast data using the dark sky api",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
